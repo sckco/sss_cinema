@@ -1,0 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sss_cinema/models/movie.dart';
+
+class MovieProvider extends ChangeNotifier {
+  List<MovieModel> movieListDaniel = [];
+  bool loadingDaniel = false;
+
+  Future loadMoviesDaniel() async {
+    loadingDaniel = true;
+    notifyListeners();
+
+    final snapshot = await FirebaseFirestore.instance.collection('movies').get();
+    movieListDaniel = snapshot.docs.map((doc) => MovieModel.fromMap(doc.data())).toList();
+
+    loadingDaniel = false;
+    notifyListeners();
+  }
+}
