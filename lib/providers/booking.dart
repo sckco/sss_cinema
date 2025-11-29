@@ -27,30 +27,3 @@ class BookingProvider extends ChangeNotifier {
     }
     return total;
   }
-
-  Future<String> checkoutBookingRendra({
-    required String userId,
-    required String movieId,
-    required String movieTitle,
-    required List<String> seats,
-    required int basePrice,
-  }) async {
-    final total = calculateTotalNaza(
-      movieTitle: movieTitle,
-      basePrice: basePrice,
-      seats: seats,
-    );
-    final id = Uuid().v4();
-    final booking = BookingModel(
-      bookingId: id,
-      userId: userId,
-      movieTitle: movieTitle,
-      seats: seats,
-      totalPrice: total,
-      bookingDate: Timestamp.now(),
-    );
-    await _firestoreServiceFahmi.createBookingFahmi(booking);
-    await _firestoreServiceFahmi.markSeatsSoldFahmi(movieId, seats);
-    return id;
-  }
-}
