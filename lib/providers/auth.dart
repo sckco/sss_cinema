@@ -12,7 +12,10 @@ class AuthProviderFahmi with ChangeNotifier {
     isLoadingFahmi = true;
     notifyListeners();
 
-    currentUserFahmi = await _authServiceFahmi.registerUserFahmi(email, password);
+    currentUserFahmi = await _authServiceFahmi.registerUserFahmi(
+      email,
+      password,
+    );
 
     isLoadingFahmi = false;
     notifyListeners();
@@ -33,4 +36,7 @@ class AuthProviderFahmi with ChangeNotifier {
     currentUserFahmi = null;
     notifyListeners();
   }
+
+  Stream<User?> streamAuthStatusFahmi() =>
+      _authServiceFahmi.getAuthStateChangesFahmi();
 }
