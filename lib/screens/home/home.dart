@@ -13,9 +13,19 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("SSS Cinema"),
-        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: const Text(
+        "SSS Cinema",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 26,
+          letterSpacing: 1.2,
+          color: Colors.white,
+        ),
       ),
+      centerTitle: true,
+    ),
       body: RefreshIndicator(
         onRefresh: () => providerDaniel.loadMoviesDaniel(),
         child: providerDaniel.loadingDaniel
