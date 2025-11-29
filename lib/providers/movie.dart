@@ -10,8 +10,12 @@ class MovieProvider extends ChangeNotifier {
     loadingDaniel = true;
     notifyListeners();
 
-    final snapshot = await FirebaseFirestore.instance.collection('movies').get();
-    movieListDaniel = snapshot.docs.map((doc) => MovieModelFahmi.fromMap(doc.data())).toList();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('movies')
+        .get();
+    movieListDaniel = snapshot.docs
+        .map((doc) => MovieModelFahmi.fromMap(doc.data()))
+        .toList();
 
     loadingDaniel = false;
     notifyListeners();

@@ -43,14 +43,14 @@ class BookingProvider extends ChangeNotifier {
     final id = Uuid().v4();
     final booking = BookingModelFahmi(
       bookingId: id,
+      movieId: movieId,
       userId: userId,
       movieTitle: movieTitle,
       seats: seats,
       totalPrice: total,
       bookingDate: Timestamp.now(),
     );
-    await _firestoreServiceFahmi.createBookingFahmi(booking);
-    await _firestoreServiceFahmi.markSeatsSoldFahmi(movieId, seats);
+    await _firestoreServiceFahmi.addBookingFahmi(booking);
     return id;
   }
 }

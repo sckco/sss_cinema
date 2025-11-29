@@ -3,8 +3,7 @@ import 'package:sss_cinema/models/movie.dart';
 import 'package:sss_cinema/models/booking.dart';
 import 'package:sss_cinema/utils/helper.dart';
 import 'package:sss_cinema/utils/constants.dart';
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreServiceFahmi {
   final FirebaseFirestore _dbFahmi = FirebaseFirestore.instance;
@@ -25,7 +24,7 @@ class FirestoreServiceFahmi {
           .get();
 
       return snapshot.docs
-          .map((doc) => MovieModelFahmi.fromMap(mapFromDoc(doc), doc.id))
+          .map((doc) => MovieModelFahmi.fromMap(mapFromDoc(doc)))
           .toList();
     } catch (e) {
       print("Error getMoviesFahmi: $e");
@@ -73,10 +72,29 @@ class FirestoreServiceFahmi {
           .get();
 
       return snapshot.docs
-          .map((doc) => BookingModelFahmi.fromMap(mapFromDoc(doc), doc.id))
+          .map((doc) => BookingModelFahmi.fromMap(mapFromDoc(doc)))
           .toList();
     } catch (e) {
       print("Error getBookingsByUserFahmi: $e");
+      return [];
+    }
+  }
+
+  Future<List<String>> getSoldSeatsFahmi(String movieId) async {
+    try {
+      QuerySnapshot snapshot = await _dbFahmi
+          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
+          .where('movieId', isEqualTo: movieId)
+          .get();
+
+      List<String> soldSeats = [];
+      for (var doc in snapshot.docs) {
+        BookingModelFahmi booking = BookingModelFahmi.fromMap(mapFromDoc(doc));
+        soldSeats.addAll(booking.seats);
+      }
+      return soldSeats;
+    } catch (e) {
+      print("Error getSoldSeatsFahmi: $e");
       return [];
     }
   }

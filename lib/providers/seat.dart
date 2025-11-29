@@ -8,8 +8,10 @@ class SeatProvider extends ChangeNotifier {
 
   void toggleSeatNaza(String seat) {
     if (soldSeatsNaza.contains(seat)) return;
-    if (selectedSeatsNaza.contains(seat)) selectedSeatsNaza.remove(seat);
-    else selectedSeatsNaza.add(seat);
+    if (selectedSeatsNaza.contains(seat))
+      selectedSeatsNaza.remove(seat);
+    else
+      selectedSeatsNaza.add(seat);
     notifyListeners();
   }
 
