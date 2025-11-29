@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sss_cinema/models/movie.dart';
@@ -7,7 +8,7 @@ import 'package:sss_cinema/providers/auth.dart';
 import 'package:sss_cinema/widgets/seat.dart';
 
 class SeatScreen extends StatefulWidget {
-  final MovieModel movie;
+  final MovieModelFahmi movie;
   const SeatScreen({required this.movie});
   @override
   _SeatScreenState createState() => _SeatScreenState();

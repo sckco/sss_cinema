@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sss_cinema/models/movie.dart';
 import 'package:sss_cinema/models/booking.dart';
 import 'package:sss_cinema/utils/helper.dart';

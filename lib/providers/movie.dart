@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sss_cinema/models/movie.dart';
 
 class MovieProvider extends ChangeNotifier {
-  List<MovieModel> movieListDaniel = [];
+  List<MovieModelFahmi> movieListDaniel = [];
   bool loadingDaniel = false;
 
   Future loadMoviesDaniel() async {
@@ -11,7 +11,7 @@ class MovieProvider extends ChangeNotifier {
     notifyListeners();
 
     final snapshot = await FirebaseFirestore.instance.collection('movies').get();
-    movieListDaniel = snapshot.docs.map((doc) => MovieModel.fromMap(doc.data())).toList();
+    movieListDaniel = snapshot.docs.map((doc) => MovieModelFahmi.fromMap(doc.data())).toList();
 
     loadingDaniel = false;
     notifyListeners();
