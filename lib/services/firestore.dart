@@ -1,11 +1,73 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/movie.dart';
+import 'package:sss_cinema/models/movie.dart';
+import 'package:sss_cinema/models/booking.dart';
+import 'package:sss_cinema/utils/constants.dart';
 
 class FirestoreServiceFahmi {
-  final _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _dbFahmi = FirebaseFirestore.instance;
 
   Future<List<MovieModelFahmi>> getMoviesFahmi() async {
-    final query = await _db.collection('movies').get();
-    return query.docs.map((d) => MovieModelFahmi.fromMap(d.data())).toList();
+    try {
+      QuerySnapshot snapshot = await _dbFahmi
+          .collection(FirestoreCollectionsFahmi.moviesFahmi)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => MovieModelFahmi.fromMap(
+              doc.data() as Map<String, dynamic>? ?? {}, doc.id))
+          .toList();
+    } catch (e) {
+      print("Error getMoviesFahmi: $e");
+      return [];
+    }
+  }
+
+  Future<void> addBookingFahmi(BookingModelFahmi booking) async {
+    try {
+      await _dbFahmi
+          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
+          .add(booking.toMap());
+    } catch (e) {
+      print("Error addBookingFahmi: $e");
+    }
+  }
+
+  Future<void> updateBookingFahmi(String id, BookingModelFahmi booking) async {
+    try {
+      await _dbFahmi
+          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
+          .doc(id)
+          .update(booking.toMap());
+    } catch (e) {
+      print("Error updateBookingFahmi: $e");
+    }
+  }
+
+  Future<void> deleteBookingFahmi(String id) async {
+    try {
+      await _dbFahmi
+          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
+          .doc(id)
+          .delete();
+    } catch (e) {
+      print("Error deleteBookingFahmi: $e");
+    }
+  }
+
+  Future<List<BookingModelFahmi>> getBookingsByUserFahmi(String userId) async {
+    try {
+      QuerySnapshot snapshot = await _dbFahmi
+          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => BookingModelFahmi.fromMap(
+              doc.data() as Map<String, dynamic>? ?? {}, doc.id))
+          .toList();
+    } catch (e) {
+      print("Error getBookingsByUserFahmi: $e");
+      return [];
+    }
   }
 }
