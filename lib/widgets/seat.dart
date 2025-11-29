@@ -20,15 +20,10 @@ class SeatItemNaza extends StatelessWidget {
       onTap: isSold ? null : () => onTap(seatId),
       child: Container(
         margin: EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(4),
-        ),
+        decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(6)),
         alignment: Alignment.center,
-        child: Text(
-          seatId,
-          style: TextStyle(color: Colors.white),
-        ),
+        child: Text(seatId, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
+  }
 }
