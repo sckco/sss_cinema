@@ -42,7 +42,17 @@ class MovieItemWidget extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text("${movieDaniel.rating} ⭐"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.star, color: Colors.amber, size: 16),
+              const SizedBox(width: 4),
+              Text(
+                movieDaniel.rating.toString(),
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
         ],
       ),
     );
