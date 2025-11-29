@@ -3,7 +3,7 @@ import 'package:sss_cinema/models/movie.dart';
 import 'package:sss_cinema/screens/detail/detail.dart';
 
 class MovieItemWidget extends StatelessWidget {
-  final MovieModel movieDaniel;
+  final MovieModelFahmi movieDaniel;
 
   const MovieItemWidget({super.key, required this.movieDaniel});
 
@@ -38,9 +38,7 @@ class MovieItemWidget extends StatelessWidget {
             movieDaniel.title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

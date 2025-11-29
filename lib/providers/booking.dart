@@ -5,7 +5,7 @@ import 'package:sss_cinema/models/booking.dart';
 import 'package:sss_cinema/services/firestore.dart';
 
 class BookingProvider extends ChangeNotifier {
-  final FirestoreService _firestoreServiceFahmi = FirestoreService();
+  final FirestoreServiceFahmi _firestoreServiceFahmi = FirestoreServiceFahmi();
 
   int calculateTotalNaza({
     required String movieTitle,
@@ -41,16 +41,16 @@ class BookingProvider extends ChangeNotifier {
       seats: seats,
     );
     final id = Uuid().v4();
-    final booking = BookingModel(
+    final booking = BookingModelFahmi(
       bookingId: id,
+      movieId: movieId,
       userId: userId,
       movieTitle: movieTitle,
       seats: seats,
       totalPrice: total,
       bookingDate: Timestamp.now(),
     );
-    await _firestoreServiceFahmi.createBookingFahmi(booking);
-    await _firestoreServiceFahmi.markSeatsSoldFahmi(movieId, seats);
+    await _firestoreServiceFahmi.addBookingFahmi(booking);
     return id;
   }
 }
