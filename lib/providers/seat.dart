@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sss_cinema/services/firestore.dart';
+import 'packag
 
 class SeatProvider extends ChangeNotifier {
   List<String> selectedSeatsNaza = [];
