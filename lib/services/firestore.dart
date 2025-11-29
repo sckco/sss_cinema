@@ -1,10 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sss_cinema/models/movie.dart';
 import 'package:sss_cinema/models/booking.dart';
+import 'package:sss_cinema/utils/helper.dart';
 import 'package:sss_cinema/utils/constants.dart';
+
+
 
 class FirestoreServiceFahmi {
   final FirebaseFirestore _dbFahmi = FirebaseFirestore.instance;
+
+  // Helper function untuk aman null-safety
+  Map<String, dynamic> mapFromDoc(DocumentSnapshot doc) {
+    final data = doc.data();
+    if (data != null && data is Map<String, dynamic>) {
+      return data;
+    }
+    return {};
+  }
 
   Future<List<MovieModelFahmi>> getMoviesFahmi() async {
     try {
@@ -13,8 +24,7 @@ class FirestoreServiceFahmi {
           .get();
 
       return snapshot.docs
-          .map((doc) => MovieModelFahmi.fromMap(
-              doc.data() as Map<String, dynamic>? ?? {}, doc.id))
+          .map((doc) => MovieModelFahmi.fromMap(mapFromDoc(doc), doc.id))
           .toList();
     } catch (e) {
       print("Error getMoviesFahmi: $e");
@@ -62,8 +72,7 @@ class FirestoreServiceFahmi {
           .get();
 
       return snapshot.docs
-          .map((doc) => BookingModelFahmi.fromMap(
-              doc.data() as Map<String, dynamic>? ?? {}, doc.id))
+          .map((doc) => BookingModelFahmi.fromMap(mapFromDoc(doc), doc.id))
           .toList();
     } catch (e) {
       print("Error getBookingsByUserFahmi: $e");
