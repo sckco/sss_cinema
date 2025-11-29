@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sss_cinema/models/movie.dart';
-import 'package:sss_cinema/providers/seat.dart';
-import 'package:sss_cinema/providers/booking.dart';
-import 'package:sss_cinema/providers/auth.dart';
+import '../../models/movie.dart';
+import '../../providers/seat.dart';
+import '../../providers/booking.dart';
+import '../../providers/auth.dart';
 import 'package:sss_cinema/widgets/seat.dart';
 
 class SeatScreen extends StatefulWidget {
