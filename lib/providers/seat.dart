@@ -19,10 +19,9 @@ class SeatProvider extends ChangeNotifier {
   }
 
   Future<void> loadSoldSeatsNaza(String movieId) async {
-    soldSeatsNaza = await _firestoreServiceFahmi.getSoldSeatsFahmi(movieId);
+    soldSeatsNaza = await _firestoreServiceFahmi.getSoldSeatsNaza(movieId);
     notifyListeners();
   }
-
   bool isSelectedNaza(String seat) => selectedSeatsNaza.contains(seat);
   bool isSoldNaza(String seat) => soldSeatsNaza.contains(seat);
 }
