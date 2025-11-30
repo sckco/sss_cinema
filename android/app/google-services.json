@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1040020546956",
+    "project_id": "sss-cinema",
+    "storage_bucket": "sss-cinema.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040020546956:android:bbc4898d3c49605defa2a9",
+        "android_client_info": {
+          "package_name": "com.example.sss_cinema"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-tOLKeZ7Zbbdq_XeMk9nBnIyvhhwapK4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

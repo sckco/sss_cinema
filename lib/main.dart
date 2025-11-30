@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'firebase_options.dart';
 import 'providers/auth.dart';
 import 'providers/movie.dart';
 import 'providers/seat.dart';
@@ -13,7 +14,7 @@ import 'screens/home/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const SssCinema());
 }
 
@@ -32,10 +33,7 @@ class SssCinema extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "SSS Cinema",
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
-          scaffoldBackgroundColor: Colors.white,
-        ),
+        theme: ThemeData(primarySwatch: Colors.indigo),
         home: const RootScreen(),
       ),
     );
@@ -52,17 +50,21 @@ class RootScreen extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: auth.streamAuthStatusFahmi(),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Scaffold(body: Center(child: Text("Terjadi kesalahan")));
+        }
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        if (snapshot.hasData) {
+        if (snapshot.data != null) {
           return const HomeScreen();
-        } else {
-          return const LoginScreen();
         }
+
+        return const LoginScreen();
       },
     );
   }
