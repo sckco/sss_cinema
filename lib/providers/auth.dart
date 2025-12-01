@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../services/auth.dart';
-import '../services/firestore.dart';
-import '../models/user.dart';
-import '../utils/constants.dart';
+import 'package:sss_cinema/services/auth.dart';
+import 'package:sss_cinema/services/firestore.dart';
+import 'package:sss_cinema/models/user.dart';
+import 'package:sss_cinema/utils/constants.dart';
 
 class AuthProviderFahmi with ChangeNotifier {
   final AuthServiceFahmi _authServiceFahmi = AuthServiceFahmi();
