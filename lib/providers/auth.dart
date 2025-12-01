@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../services/auth.dart';
+import 'package:sss_cinema/services/auth.dart';
 
 class AuthProviderFahmi with ChangeNotifier {
   final AuthServiceFahmi _authServiceFahmi = AuthServiceFahmi();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth.dart';
+import 'package:sss_cinema/providers/auth.dart';
 
 class RegisterFahmi extends StatefulWidget {
   const RegisterFahmi({super.key});
@@ -63,12 +63,11 @@ class _RegisterFahmiState extends State<RegisterFahmi> {
 
                         try {
                           await authProvider.registerUserFahmi(
-                            name,
                             email,
                             password,
                           );
 
-                          if (authProvider.user != null) {
+                          if (authProvider.currentUserFahmi != null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Register sukses!')),
                             );
