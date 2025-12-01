@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,9 +28,15 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -39,15 +48,6 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD77EVkX7DDaGbufUCaGtLELOJWrzKWSso',
-    appId: '1:1040020546956:web:264ef51e90f708f3efa2a9',
-    messagingSenderId: '1040020546956',
-    projectId: 'sss-cinema',
-    authDomain: 'sss-cinema.firebaseapp.com',
-    storageBucket: 'sss-cinema.firebasestorage.app',
-  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB-tOLKeZ7Zbbdq_XeMk9nBnIyvhhwapK4',
@@ -64,23 +64,5 @@ class DefaultFirebaseOptions {
     projectId: 'sss-cinema',
     storageBucket: 'sss-cinema.firebasestorage.app',
     iosBundleId: 'com.example.sssCinema',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBGMzjBG4P24ZWobhtWOO50oCs41fHsv-E',
-    appId: '1:1040020546956:ios:04d8119eaee5dc1aefa2a9',
-    messagingSenderId: '1040020546956',
-    projectId: 'sss-cinema',
-    storageBucket: 'sss-cinema.firebasestorage.app',
-    iosBundleId: 'com.example.sssCinema',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyD77EVkX7DDaGbufUCaGtLELOJWrzKWSso',
-    appId: '1:1040020546956:web:b3328fbafb5f0796efa2a9',
-    messagingSenderId: '1040020546956',
-    projectId: 'sss-cinema',
-    authDomain: 'sss-cinema.firebaseapp.com',
-    storageBucket: 'sss-cinema.firebasestorage.app',
   );
 }
