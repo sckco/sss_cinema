@@ -4,14 +4,16 @@ import 'package:sss_cinema/services/firestore.dart';
 class SeatProvider extends ChangeNotifier {
   List<String> selectedSeatsNaza = [];
   List<String> soldSeatsNaza = [];
-  final FirestoreServiceFahmi _firestoreServiceFahmi = FirestoreServiceFahmi();
+  final FirestoreServiceFahmi _firestoreService = FirestoreServiceFahmi();
 
   void toggleSeatNaza(String seat) {
     if (soldSeatsNaza.contains(seat)) return;
-    if (selectedSeatsNaza.contains(seat))
+
+    if (selectedSeatsNaza.contains(seat)) {
       selectedSeatsNaza.remove(seat);
-    else
+    } else {
       selectedSeatsNaza.add(seat);
+    }
     notifyListeners();
   }
 
@@ -21,7 +23,8 @@ class SeatProvider extends ChangeNotifier {
   }
 
   Future<void> loadSoldSeatsNaza(String movieId) async {
-    soldSeatsNaza = await _firestoreServiceFahmi.getSoldSeatsFahmi(movieId);
+    // Ambil kursi yang sudah dipesan dari Firestore
+    soldSeatsNaza = await _firestoreService.getSoldSeatsFahmi(movieId);
     notifyListeners();
   }
 

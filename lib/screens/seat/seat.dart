@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sss_cinema/models/movie.dart';
@@ -9,122 +8,243 @@ import 'package:sss_cinema/widgets/seat.dart';
 
 class SeatScreen extends StatefulWidget {
   final MovieModelFahmi movie;
-  const SeatScreen({required this.movie});
+  const SeatScreen({super.key, required this.movie});
+
   @override
-  _SeatScreenState createState() => _SeatScreenState();
+  State<SeatScreen> createState() => _SeatScreenState();
 }
 
 class _SeatScreenState extends State<SeatScreen> {
-  final int rowsNaza = 6;
-  final int colsNaza = 8;
+  final int rows = 6;
+  final int cols = 8;
 
   @override
   void initState() {
     super.initState();
-    final seatProvider = Provider.of<SeatProvider>(context, listen: false);
-    seatProvider.loadSoldSeatsNaza(widget.movie.movieId);
+    Provider.of<SeatProvider>(
+      context,
+      listen: false,
+    ).loadSoldSeatsNaza(widget.movie.movieId);
   }
 
-  List<String> _generateSeatIdsNaza() {
-    List<String> list = [];
-    for (int r = 0; r < rowsNaza; r++) {
-      final rowLetter = String.fromCharCode('A'.codeUnitAt(0) + r);
-      for (int c = 1; c <= colsNaza; c++) list.add('$rowLetter$c');
+  void showPaymentSuccessPopup() {
+    final overlay = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 120,
+        left: 20,
+        right: 20,
+        child: Material(
+          color: Colors.transparent,
+          child: AnimatedOpacity(
+            opacity: 1,
+            duration: const Duration(milliseconds: 300),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check_circle, color: Colors.white, size: 40),
+                  SizedBox(height: 10),
+                  Text(
+                    "Pembayaran Berhasil!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    "Tiket berhasil dipesan.",
+                    style: TextStyle(color: Colors.white70),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(overlay);
+    Future.delayed(const Duration(seconds: 2), () => overlay.remove());
+  }
+
+  List<String> generateSeats() {
+    List<String> s = [];
+    for (int r = 0; r < rows; r++) {
+      String row = String.fromCharCode(65 + r);
+      for (int c = 1; c <= cols; c++) {
+        s.add("$row$c");
+      }
     }
-    return list;
+    return s;
   }
 
   @override
   Widget build(BuildContext context) {
-    final seatProvider = Provider.of<SeatProvider>(context);
-    final bookingProvider = Provider.of<BookingProvider>(context);
-    final authProvider = Provider.of<AuthProviderFahmi>(context);
-    final seats = _generateSeatIdsNaza();
+    final seatProv = Provider.of<SeatProvider>(context);
+    final bookProv = Provider.of<BookingProvider>(context);
+    final auth = Provider.of<AuthProviderFahmi>(context);
 
-    int totalNowNaza() {
-      return bookingProvider.calculateTotalNaza(
-        movieTitle: widget.movie.title,
-        basePrice: widget.movie.basePrice,
-        seats: seatProvider.selectedSeatsNaza,
-      );
-    }
+    final seats = generateSeats();
+
+    final total = bookProv.calculateTotal(
+      movieTitle: widget.movie.title,
+      basePrice: widget.movie.basePrice,
+      seats: seatProv.selectedSeatsNaza,
+    );
 
     return Scaffold(
-      appBar: AppBar(title: Text('Pilih Kursi - ${widget.movie.title}')),
-      body: Column(
-        children: [
-          SizedBox(height: 12),
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: colsNaza,
-              padding: EdgeInsets.all(12),
-              children: seats.map((s) {
-                final sold = seatProvider.isSoldNaza(s);
-                final selected = seatProvider.isSelectedNaza(s);
-                return SeatItemNaza(
-                  seatId: s,
-                  isSold: sold,
-                  isSelected: selected,
-                  onTap: (id) => seatProvider.toggleSeatNaza(id),
-                );
-              }).toList(),
-            ),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        title: Text(
+          "Pilih Kursi - ${widget.movie.title}",
+          style: const TextStyle(color: Colors.redAccent),
+        ),
+      ),
+
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Color(0xFF1A0000), Color(0xFF300000)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          Container(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text('Dipilih: '),
-                    Expanded(
-                      child: Text(seatProvider.selectedSeatsNaza.join(', ')),
-                    ),
-                    Text('Total: Rp ${totalNowNaza()}'),
-                  ],
+        ),
+
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.all(18),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: cols,
+                  crossAxisSpacing: 6,
+                  mainAxisSpacing: 6,
                 ),
-                SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: seatProvider.selectedSeatsNaza.isEmpty
-                      ? null
-                      : () async {
-                          try {
-                            final user = authProvider.currentUserFahmi;
+                itemCount: seats.length,
+                itemBuilder: (_, i) {
+                  final id = seats[i];
+                  return Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.redAccent.withOpacity(0.3),
+                          blurRadius: 6,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: SeatItemNaza(
+                      seatId: id,
+                      isSold: seatProv.isSoldNaza(id),
+                      isSelected: seatProv.isSelectedNaza(id),
+                      onTap: (s) => seatProv.toggleSeatNaza(s),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Dipilih: ${seatProv.selectedSeatsNaza.join(', ')}",
+                    style: const TextStyle(color: Colors.white70),
+                  ),
+                  const SizedBox(height: 6),
+
+                  Text(
+                    "Total: Rp $total",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                    onPressed: seatProv.selectedSeatsNaza.isEmpty
+                        ? null
+                        : () async {
+                            final user = auth.currentUserFahmi;
                             if (user == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Silakan login')),
+                                const SnackBar(
+                                  content: Text(
+                                    "Silakan login terlebih dahulu",
+                                  ),
+                                ),
                               );
                               return;
                             }
-                            final id = await bookingProvider
-                                .checkoutBookingRendra(
-                                  userId: user.uid,
-                                  movieId: widget.movie.movieId,
-                                  movieTitle: widget.movie.title,
-                                  seats: seatProvider.selectedSeatsNaza,
-                                  basePrice: widget.movie.basePrice,
-                                );
-                            seatProvider.clearSelectedSeatsNaza();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Booking sukses: $id')),
+
+                            // Simpan booking ke Firestore
+                            await bookProv.checkoutBooking(
+                              userId: user.uid,
+                              movieId: widget.movie.movieId,
+                              movieTitle: widget.movie.title,
+                              basePrice: widget.movie.basePrice,
+                              seats: seatProv.selectedSeatsNaza,
                             );
-                            Navigator.pop(context);
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Terjadi kesalahan: ${e.toString()}',
-                                ),
-                              ),
+
+                            // Ambil ulang kursi terjual dari Firestore
+                            await seatProv.loadSoldSeatsNaza(
+                              widget.movie.movieId,
                             );
-                          }
-                        },
-                  child: Text('Checkout'),
-                ),
-              ],
+
+                            // Clear kursi yang dipilih
+                            seatProv.clearSelectedSeatsNaza();
+
+                            showPaymentSuccessPopup();
+
+                            Future.delayed(const Duration(seconds: 2), () {
+                              Navigator.pop(context);
+                            });
+                          },
+
+                    child: const Text(
+                      "Checkout",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

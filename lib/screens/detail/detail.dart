@@ -9,34 +9,106 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(movieDaniel.title)),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.black,
+        title: Text(
+          movieDaniel.title,
+          style: const TextStyle(
+            color: Colors.redAccent,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+      ),
+
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.black,
+              Color(0xFF1A0000),
+              Color(0xFF2B0000),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Hero(
-              tag: movieDaniel.movieId,
-              child: Image.network(movieDaniel.posterUrl),
+            // SCROLL AREA
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Hero(
+                      tag: movieDaniel.movieId,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Image.network(
+                          movieDaniel.posterUrl,
+                          fit: BoxFit.cover,
+                          height: 380,
+                          width: double.infinity,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    Text(
+                      movieDaniel.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    Text("⭐ Rating: ${movieDaniel.rating}",
+                        style: const TextStyle(color: Colors.white70)),
+                    Text("⏱ Duration: ${movieDaniel.duration} mins",
+                        style: const TextStyle(color: Colors.white70)),
+                    Text("💵 Price: Rp ${movieDaniel.basePrice}",
+                        style: const TextStyle(color: Colors.white70)),
+
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              movieDaniel.title,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text('Rating: ${movieDaniel.rating}'),
-            const SizedBox(height: 8),
-            Text('Duration: ${movieDaniel.duration} minutes'),
-            const SizedBox(height: 8),
-            Text('Price: Rp ${movieDaniel.basePrice}'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/seat', arguments: movieDaniel);
-              },
-              child: const Text('Pilih Kursi'),
-            ),
+
+            // BUTTON di paling bawah
+            Padding(
+              padding: const EdgeInsets.all(18),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  minimumSize: const Size(double.infinity, 55),
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/seat',
+                    arguments: movieDaniel,
+                  );
+                },
+                child: const Text(
+                  "Pilih Kursi",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

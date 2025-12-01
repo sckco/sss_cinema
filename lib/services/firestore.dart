@@ -2,24 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sss_cinema/models/movie.dart';
 import 'package:sss_cinema/models/booking.dart';
 import 'package:sss_cinema/models/user.dart';
-import 'package:sss_cinema/utils/helper.dart';
 import 'package:sss_cinema/utils/constants.dart';
 
 class FirestoreServiceFahmi {
-  final FirebaseFirestore _dbFahmi = FirebaseFirestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // Helper function untuk aman null-safety
   Map<String, dynamic> mapFromDoc(DocumentSnapshot doc) {
     final data = doc.data();
-    if (data != null && data is Map<String, dynamic>) {
-      return data;
-    }
+    if (data != null && data is Map<String, dynamic>) return data;
     return {};
   }
 
   Future<List<MovieModelFahmi>> getMoviesFahmi() async {
     try {
-      QuerySnapshot snapshot = await _dbFahmi
+      final snapshot = await _db
           .collection(FirestoreCollectionsFahmi.moviesFahmi)
           .get();
 
@@ -32,43 +28,24 @@ class FirestoreServiceFahmi {
     }
   }
 
-  Future<void> addBookingFahmi(BookingModelFahmi booking) async {
+  Future<String> addBookingReturnIdFahmi(BookingModelFahmi booking) async {
     try {
-      await _dbFahmi
+      final docRef = await _db
           .collection(FirestoreCollectionsFahmi.bookingsFahmi)
           .add(booking.toMap());
-    } catch (e) {
-      print("Error addBookingFahmi: $e");
-    }
-  }
 
-  Future<void> updateBookingFahmi(String id, BookingModelFahmi booking) async {
-    try {
-      await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-          .doc(id)
-          .update(booking.toMap());
+      return docRef.id;
     } catch (e) {
-      print("Error updateBookingFahmi: $e");
-    }
-  }
-
-  Future<void> deleteBookingFahmi(String id) async {
-    try {
-      await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-          .doc(id)
-          .delete();
-    } catch (e) {
-      print("Error deleteBookingFahmi: $e");
+      print("Error addBookingReturnIdFahmi: $e");
+      return "";
     }
   }
 
   Future<List<BookingModelFahmi>> getBookingsByUserFahmi(String userId) async {
     try {
-      QuerySnapshot snapshot = await _dbFahmi
+      final snapshot = await _db
           .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-          .where('userId', isEqualTo: userId)
+          .where("userId", isEqualTo: userId)
           .get();
 
       return snapshot.docs
@@ -80,28 +57,38 @@ class FirestoreServiceFahmi {
     }
   }
 
-  Future<List<String>> getSoldSeatsFahmi(String movieId) async {
+  Future<Map<String, dynamic>?> getUserByUid(String uid) async {
     try {
-      QuerySnapshot snapshot = await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-          .where('movieId', isEqualTo: movieId)
+      final doc = await _db
+          .collection(FirestoreCollectionsFahmi.usersFahmi)
+          .doc(uid)
           .get();
 
-      List<String> soldSeats = [];
-      for (var doc in snapshot.docs) {
-        BookingModelFahmi booking = BookingModelFahmi.fromMap(mapFromDoc(doc));
-        soldSeats.addAll(booking.seats);
-      }
-      return soldSeats;
+      if (!doc.exists) return null;
+      return mapFromDoc(doc);
     } catch (e) {
-      print("Error getSoldSeatsFahmi: $e");
-      return [];
+      print("Error getUserByUid: $e");
+      return null;
     }
   }
 
+Future<List<String>> getSoldSeatsFahmi(String movieId) async {
+  QuerySnapshot snapshot = await _db
+      .collection(FirestoreCollectionsFahmi.bookingsFahmi)
+      .where('movieId', isEqualTo: movieId)
+      .get();
+
+  List<String> soldSeats = [];
+  for (var doc in snapshot.docs) {
+    BookingModelFahmi booking = BookingModelFahmi.fromMap(mapFromDoc(doc));
+    soldSeats.addAll(booking.seats);
+  }
+  return soldSeats;
+}
+
   Future<void> addUserFahmi(UserModelFahmi user) async {
     try {
-      await _dbFahmi
+      await _db
           .collection(FirestoreCollectionsFahmi.usersFahmi)
           .doc(user.uid)
           .set(user.toMap());

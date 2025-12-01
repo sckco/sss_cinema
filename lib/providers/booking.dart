@@ -5,9 +5,9 @@ import 'package:sss_cinema/models/booking.dart';
 import 'package:sss_cinema/services/firestore.dart';
 
 class BookingProvider extends ChangeNotifier {
-  final FirestoreServiceFahmi _firestoreServiceFahmi = FirestoreServiceFahmi();
+  final FirestoreServiceFahmi _firestoreService = FirestoreServiceFahmi();
 
-  int calculateTotalNaza({
+  int calculateTotal({
     required String movieTitle,
     required int basePrice,
     required List<String> seats,
@@ -18,39 +18,34 @@ class BookingProvider extends ChangeNotifier {
       final numPart = seat.replaceAll(RegExp(r'[^0-9]'), '');
       final seatNum = int.tryParse(numPart) ?? 0;
       int price = basePrice;
-      if (seatNum % 2 == 0) {
-        final discount = (price * 0.10).round();
-        price = price - discount;
-      }
+      if (seatNum % 2 == 0) price -= (price * 0.10).round();
       if (longTitle) price += 2500;
       total += price;
     }
     return total;
   }
 
-  Future<String> checkoutBookingRendra({
+  Future<String> checkoutBooking({
     required String userId,
     required String movieId,
     required String movieTitle,
     required List<String> seats,
     required int basePrice,
   }) async {
-    final total = calculateTotalNaza(
-      movieTitle: movieTitle,
-      basePrice: basePrice,
-      seats: seats,
-    );
-    final id = Uuid().v4();
+    final total = calculateTotal(movieTitle: movieTitle, basePrice: basePrice, seats: seats);
+    final id = const Uuid().v4();
     final booking = BookingModelFahmi(
       bookingId: id,
-      movieId: movieId,
       userId: userId,
+      movieId: movieId,
       movieTitle: movieTitle,
       seats: seats,
       totalPrice: total,
       bookingDate: Timestamp.now(),
     );
-    await _firestoreServiceFahmi.addBookingFahmi(booking);
+
+    // Simpan ke Firestore
+    await _firestoreService.addBookingReturnIdFahmi(booking);
     return id;
   }
 }

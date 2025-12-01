@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sss_cinema/screens/profile/profile.dart';
 
 import 'firebase_options.dart';
 import 'providers/auth.dart';
@@ -11,6 +12,9 @@ import 'providers/booking.dart';
 
 import 'screens/auth/login.dart';
 import 'screens/home/home.dart';
+import 'screens/detail/detail.dart';
+import 'screens/seat/seat.dart';
+import 'models/movie.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +37,44 @@ class SssCinema extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "SSS Cinema",
-        theme: ThemeData(primarySwatch: Colors.indigo),
+
+        theme: ThemeData(
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.black,
+          colorScheme: const ColorScheme.dark(
+            primary: Colors.redAccent,
+            secondary: Colors.red,
+          ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.black,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.white),
+            titleTextStyle: TextStyle(
+              color: Colors.redAccent,
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
+        ),
+
+        routes: {
+          '/login': (context) => const LoginScreen(), // wajib ada
+          '/profile': (context) => const ProfileScreenFahmi(),
+          '/home': (context) => const HomeScreen(),
+
+          '/detail': (context) {
+            final movie =
+                ModalRoute.of(context)!.settings.arguments as MovieModelFahmi;
+            return DetailScreen(movieDaniel: movie);
+          },
+
+          '/seat': (context) {
+            final movie =
+                ModalRoute.of(context)!.settings.arguments as MovieModelFahmi;
+            return SeatScreen(movie: movie);
+          },
+        },
+
         home: const RootScreen(),
       ),
     );

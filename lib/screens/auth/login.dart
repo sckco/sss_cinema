@@ -16,6 +16,13 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProviderFahmi>(context);
 
@@ -64,12 +71,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Login sukses!')),
                             );
-                            // TODO: Navigasi ke home screen
+                            Navigator.pushReplacementNamed(context, '/');
                           }
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: $e')),
-                          );
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('Error: $e')));
                         } finally {
                           setState(() => isLoading = false);
                         }

@@ -8,7 +8,7 @@ import 'package:sss_cinema/utils/constants.dart';
 class AuthProviderFahmi with ChangeNotifier {
   final AuthServiceFahmi _authServiceFahmi = AuthServiceFahmi();
 
-  User? currentUserFahmi;
+  UserModelFahmi? currentUserFahmi;
   bool isLoadingFahmi = false;
 
   Future<void> registerUserFahmi(
@@ -19,30 +19,56 @@ class AuthProviderFahmi with ChangeNotifier {
     isLoadingFahmi = true;
     notifyListeners();
 
-    currentUserFahmi = await _authServiceFahmi.registerUserFahmi(
+    final firebaseUser = await _authServiceFahmi.registerUserFahmi(
       email,
       password,
     );
 
-    // Save user data to Firestore
-    if (currentUserFahmi != null) {
+    if (firebaseUser != null) {
       final userModel = UserModelFahmi(
-        uid: currentUserFahmi!.uid,
+        uid: firebaseUser.uid,
         name: name,
         email: email,
       );
+
       await FirestoreServiceFahmi().addUserFahmi(userModel);
+
+      currentUserFahmi = userModel;
     }
 
     isLoadingFahmi = false;
     notifyListeners();
+
+    Future<void> logoutFahmi() async {
+      await FirebaseAuth.instance.signOut();
+      currentUserFahmi = null;
+      notifyListeners();
+    }
   }
 
   Future<void> loginUserFahmi(String email, String password) async {
     isLoadingFahmi = true;
     notifyListeners();
 
-    currentUserFahmi = await _authServiceFahmi.loginUserFahmi(email, password);
+    final firebaseUser = await _authServiceFahmi.loginUserFahmi(
+      email,
+      password,
+    );
+
+    if (firebaseUser != null) {
+      final data = await FirestoreServiceFahmi().getUserByUid(firebaseUser.uid);
+
+      if (data != null) {
+        currentUserFahmi = UserModelFahmi.fromMap(data);
+      } else {
+        // fallback
+        currentUserFahmi = UserModelFahmi(
+          uid: firebaseUser.uid,
+          name: firebaseUser.displayName ?? "-",
+          email: firebaseUser.email ?? "-",
+        );
+      }
+    }
 
     isLoadingFahmi = false;
     notifyListeners();
@@ -54,6 +80,7 @@ class AuthProviderFahmi with ChangeNotifier {
     notifyListeners();
   }
 
-  Stream<User?> streamAuthStatusFahmi() =>
-      _authServiceFahmi.getAuthStateChangesFahmi();
+  Stream<User?> streamAuthStatusFahmi() {
+    return FirebaseAuth.instance.authStateChanges();
+  }
 }
