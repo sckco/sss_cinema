@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth.dart';
+import '../services/firestore.dart';
+import '../models/user.dart';
+import '../utils/constants.dart';
 
 class AuthProviderFahmi with ChangeNotifier {
   final AuthServiceFahmi _authServiceFahmi = AuthServiceFahmi();
@@ -8,7 +11,11 @@ class AuthProviderFahmi with ChangeNotifier {
   User? currentUserFahmi;
   bool isLoadingFahmi = false;
 
-  Future<void> registerUserFahmi(String email, String password) async {
+  Future<void> registerUserFahmi(
+    String name,
+    String email,
+    String password,
+  ) async {
     isLoadingFahmi = true;
     notifyListeners();
 
@@ -16,6 +23,16 @@ class AuthProviderFahmi with ChangeNotifier {
       email,
       password,
     );
+
+    // Save user data to Firestore
+    if (currentUserFahmi != null) {
+      final userModel = UserModelFahmi(
+        uid: currentUserFahmi!.uid,
+        name: name,
+        email: email,
+      );
+      await FirestoreServiceFahmi().addUserFahmi(userModel);
+    }
 
     isLoadingFahmi = false;
     notifyListeners();

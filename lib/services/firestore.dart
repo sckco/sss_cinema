@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sss_cinema/models/movie.dart';
 import 'package:sss_cinema/models/booking.dart';
+import 'package:sss_cinema/models/user.dart';
 import 'package:sss_cinema/utils/helper.dart';
 import 'package:sss_cinema/utils/constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreServiceFahmi {
   final FirebaseFirestore _dbFahmi = FirebaseFirestore.instance;
@@ -96,6 +96,17 @@ class FirestoreServiceFahmi {
     } catch (e) {
       print("Error getSoldSeatsFahmi: $e");
       return [];
+    }
+  }
+
+  Future<void> addUserFahmi(UserModelFahmi user) async {
+    try {
+      await _dbFahmi
+          .collection(FirestoreCollectionsFahmi.usersFahmi)
+          .doc(user.uid)
+          .set(user.toMap());
+    } catch (e) {
+      print("Error addUserFahmi: $e");
     }
   }
 }

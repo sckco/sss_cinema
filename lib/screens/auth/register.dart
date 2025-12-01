@@ -54,7 +54,9 @@ class _RegisterFahmiState extends State<RegisterFahmi> {
 
                         if (name.isEmpty || email.isEmpty || password.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Semua field harus diisi!')),
+                            const SnackBar(
+                              content: Text('Semua field harus diisi!'),
+                            ),
                           );
                           return;
                         }
@@ -68,16 +70,16 @@ class _RegisterFahmiState extends State<RegisterFahmi> {
                             password,
                           );
 
-                          if (authProvider.user != null) {
+                          if (authProvider.currentUserFahmi != null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Register sukses!')),
                             );
                             Navigator.pop(context); // kembali ke login
                           }
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: $e')),
-                          );
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('Error: $e')));
                         } finally {
                           setState(() => isLoading = false);
                         }
@@ -91,4 +93,3 @@ class _RegisterFahmiState extends State<RegisterFahmi> {
     );
   }
 }
-  
