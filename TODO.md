@@ -1,0 +1,2 @@
+- [ ] Update lib/providers/auth.dart to handle name parameter and Firestore saving
+- [ ] Fix property access in lib/screens/auth/register.dart
