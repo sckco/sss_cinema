@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sss_cinema/providers/auth.dart';
 import 'package:sss_cinema/providers/movie.dart';
 import 'package:sss_cinema/widgets/movie.dart';
 import 'package:sss_cinema/models/movie.dart';
@@ -10,6 +11,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providerDaniel = Provider.of<MovieProvider>(context);
+    final authProvider = Provider.of<AuthProviderFahmi>(context, listen: false);
+
+    // Jalankan loadMovies setelah frame pertama
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      providerDaniel.loadMoviesDaniel();
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -25,6 +32,35 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              // Konfirmasi logout
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Konfirmasi Logout"),
+                  content: const Text("Apakah Anda yakin ingin logout?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text("Batal"),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text("Logout"),
+                    ),
+                  ],
+                ),
+              );
+
+              if (confirm == true) {
+                await authProvider.logoutFahmi();
+              }
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () => providerDaniel.loadMoviesDaniel(),

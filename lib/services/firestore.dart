@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sss_cinema/models/movie.dart';
 import 'package:sss_cinema/models/booking.dart';
 import 'package:sss_cinema/models/user.dart';
-import 'package:sss_cinema/utils/helper.dart';
 import 'package:sss_cinema/utils/constants.dart';
 
 class FirestoreServiceFahmi {
@@ -51,13 +50,21 @@ class FirestoreServiceFahmi {
   }
 
   Future<void> addUserFahmi(UserModelFahmi user) async {
-    try {
-      await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.usersFahmi)
-          .doc(user.uid)
-          .set(user.toMap());
-    } catch (e) {
-      print("Error addUserFahmi: $e");
-    }
+  try {
+    await _db
+        .collection(FirestoreCollectionsFahmi.usersFahmi)
+        .doc(user.uid)
+        .set(user.toMap());
+  } catch (e) {
+    print("Error addUserFahmi: $e");
   }
+}
+
+Future<void> addBookingFahmi(BookingModelFahmi booking) async {
+  try {
+    await _db.collection('bookings').add(booking.toMap());
+  } catch (e) {
+    print("Error addBookingFahmi: $e");
+  }
+}
 }

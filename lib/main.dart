@@ -12,24 +12,24 @@ import 'providers/booking.dart';
 import 'screens/auth/login.dart';
 import 'screens/auth/register.dart';
 import 'screens/home/home.dart';
-import 'package:sss_cinema/providers/auth.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const SssCinema());
+  runApp(const SssCinemaApp());
 }
 
 class SssCinemaApp extends StatelessWidget {
   const SssCinemaApp({super.key});
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProviderFahmi()),
+        ChangeNotifierProvider(create: (_) => MovieProvider()),
+        ChangeNotifierProvider(create: (_) => SeatProvider()),
+        ChangeNotifierProvider(create: (_) => BookingProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -52,7 +52,9 @@ class RootScreen extends StatelessWidget {
       stream: auth.streamAuthStatusFahmi(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return const Scaffold(body: Center(child: Text("Terjadi kesalahan")));
+          return const Scaffold(
+            body: Center(child: Text("Terjadi kesalahan")),
+          );
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -62,7 +64,7 @@ class RootScreen extends StatelessWidget {
         }
 
         if (snapshot.data != null) {
-          return const HomeScreen();
+          return const HomeScreen(); // Sekarang HomeScreen sudah punya semua provider
         }
 
         return const LoginScreen();

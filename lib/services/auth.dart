@@ -26,10 +26,15 @@ class AuthServiceFahmi {
   }
 
   // Logout
-  Future<void> logoutUserFahmi() async {
+  Future<void> logoutFahmi() async {
     await _auth.signOut();
   }
 
   // Current user
   User? get currentUser => _auth.currentUser;
+
+  // Stream auth state
+  Stream<User?> getAuthStateChangesFahmi() {
+    return _auth.authStateChanges();
+  }
 }
