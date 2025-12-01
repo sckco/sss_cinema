@@ -65,6 +65,7 @@ class _RegisterFahmiState extends State<RegisterFahmi> {
 
                         try {
                           await authProvider.registerUserFahmi(
+                            name,
                             email,
                             password,
                           );
