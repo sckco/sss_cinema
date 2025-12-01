@@ -12,7 +12,7 @@ import 'providers/booking.dart';
 import 'screens/auth/login.dart';
 import 'screens/auth/register.dart';
 import 'screens/home/home.dart';
-import 'package:sss_cinema/providers/auth_provider.dart';
+import 'package:sss_cinema/providers/auth.dart';
 
 
 
