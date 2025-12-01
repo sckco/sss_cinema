@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sss_cinema/models/movie.dart';
-import 'package:sss_cinema/models/booking.dart';
-import 'package:sss_cinema/utils/helper.dart';
-import 'package:sss_cinema/utils/constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/movie.dart';
+import '../models/booking.dart';
 
 class FirestoreServiceFahmi {
-  final FirebaseFirestore _dbFahmi = FirebaseFirestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // Helper function untuk aman null-safety
+  // Helper null-safe
   Map<String, dynamic> mapFromDoc(DocumentSnapshot doc) {
     final data = doc.data();
     if (data != null && data is Map<String, dynamic>) {
@@ -17,12 +14,10 @@ class FirestoreServiceFahmi {
     return {};
   }
 
+  // Ambil semua film
   Future<List<MovieModelFahmi>> getMoviesFahmi() async {
     try {
-      QuerySnapshot snapshot = await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.moviesFahmi)
-          .get();
-
+      final snapshot = await _db.collection('movies').get();
       return snapshot.docs
           .map((doc) => MovieModelFahmi.fromMap(mapFromDoc(doc)))
           .toList();
@@ -32,70 +27,32 @@ class FirestoreServiceFahmi {
     }
   }
 
-  Future<void> addBookingFahmi(BookingModelFahmi booking) async {
-    try {
-      await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-          .add(booking.toMap());
-    } catch (e) {
-      print("Error addBookingFahmi: $e");
-    }
-  }
-
-  Future<void> updateBookingFahmi(String id, BookingModelFahmi booking) async {
-    try {
-      await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-          .doc(id)
-          .update(booking.toMap());
-    } catch (e) {
-      print("Error updateBookingFahmi: $e");
-    }
-  }
-
-  Future<void> deleteBookingFahmi(String id) async {
-    try {
-      await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-          .doc(id)
-          .delete();
-    } catch (e) {
-      print("Error deleteBookingFahmi: $e");
-    }
-  }
-
-  Future<List<BookingModelFahmi>> getBookingsByUserFahmi(String userId) async {
-    try {
-      QuerySnapshot snapshot = await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-          .where('userId', isEqualTo: userId)
-          .get();
-
-      return snapshot.docs
-          .map((doc) => BookingModelFahmi.fromMap(mapFromDoc(doc)))
-          .toList();
-    } catch (e) {
-      print("Error getBookingsByUserFahmi: $e");
-      return [];
-    }
-  }
-
+  // Ambil kursi yang sudah terpesan
   Future<List<String>> getSoldSeatsFahmi(String movieId) async {
     try {
-      QuerySnapshot snapshot = await _dbFahmi
-          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
+      final snapshot = await _db
+          .collection('bookings')
           .where('movieId', isEqualTo: movieId)
           .get();
 
       List<String> soldSeats = [];
       for (var doc in snapshot.docs) {
-        BookingModelFahmi booking = BookingModelFahmi.fromMap(mapFromDoc(doc));
+        final booking = BookingModelFahmi.fromMap(mapFromDoc(doc));
         soldSeats.addAll(booking.seats);
       }
       return soldSeats;
     } catch (e) {
       print("Error getSoldSeatsFahmi: $e");
       return [];
+    }
+  }
+
+  // Tambah booking
+  Future<void> addBookingFahmi(BookingModelFahmi booking) async {
+    try {
+      await _db.collection('bookings').add(booking.toMap());
+    } catch (e) {
+      print("Error addBookingFahmi: $e");
     }
   }
 }
