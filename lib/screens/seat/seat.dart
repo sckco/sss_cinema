@@ -24,7 +24,7 @@ class _SeatScreenState extends State<SeatScreen> {
     Provider.of<SeatProvider>(
       context,
       listen: false,
-    ).loadSoldSeatsNaza(widget.movie.movieId);
+    ).listenSoldSeatsRealtime(widget.movie.movieId);
   }
 
   void showPaymentSuccessPopup() {
@@ -99,6 +99,13 @@ class _SeatScreenState extends State<SeatScreen> {
     final seatProv = Provider.of<SeatProvider>(context);
     final bookProv = Provider.of<BookingProvider>(context);
     final auth = Provider.of<AuthProviderFahmi>(context);
+
+    final user = auth.currentUserFahmi;
+    if (user != null && !seatProv.selectedSeatsLoaded) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        seatProv.loadSelectedSeats(user.uid, widget.movie.movieId);
+      });
+    }
 
     final seats = generateSeats();
 
@@ -208,7 +215,7 @@ class _SeatScreenState extends State<SeatScreen> {
                             }
 
                             // Simpan booking ke Firestore
-                            await bookProv.checkoutBooking(
+                            final bookingId = await bookProv.checkoutBooking(
                               userId: user.uid,
                               movieId: widget.movie.movieId,
                               movieTitle: widget.movie.title,
@@ -216,14 +223,20 @@ class _SeatScreenState extends State<SeatScreen> {
                               seats: seatProv.selectedSeatsNaza,
                             );
 
-                            // Ambil ulang kursi terjual dari Firestore
-                            await seatProv.loadSoldSeatsNaza(
-                              widget.movie.movieId,
-                            );
+                            if (bookingId == null) {
+                              // Kursi tidak tersedia
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Kursi yang dipilih sudah tidak tersedia. Silakan pilih kursi lain.",
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
 
-                            // Clear kursi yang dipilih
+                            // Setelah booking berhasil
                             seatProv.clearSelectedSeatsNaza();
-
                             showPaymentSuccessPopup();
 
                             Future.delayed(const Duration(seconds: 2), () {

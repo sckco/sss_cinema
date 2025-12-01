@@ -1,2 +1,3 @@
-- [ ] Update lib/providers/auth.dart to handle name parameter and Firestore saving
-- [ ] Fix property access in lib/screens/auth/register.dart
+# TODO List for Fixing Listen Error in Seat Provider
+
+- [x] Modify `getSoldSeatsFahmi` in `lib/services/firestore.dart` to return `Stream<List<String>>` using Firestore snapshots for realtime updates.

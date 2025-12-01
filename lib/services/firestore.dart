@@ -72,19 +72,77 @@ class FirestoreServiceFahmi {
     }
   }
 
-Future<List<String>> getSoldSeatsFahmi(String movieId) async {
-  QuerySnapshot snapshot = await _db
-      .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-      .where('movieId', isEqualTo: movieId)
-      .get();
-
-  List<String> soldSeats = [];
-  for (var doc in snapshot.docs) {
-    BookingModelFahmi booking = BookingModelFahmi.fromMap(mapFromDoc(doc));
-    soldSeats.addAll(booking.seats);
+  Stream<List<String>> getSoldSeatsFahmi(String movieId) {
+    return _db.collection('sold_seats_fahmi').doc(movieId).snapshots().map((
+      DocumentSnapshot snapshot,
+    ) {
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>?;
+        return List<String>.from(data?['seats'] ?? []);
+      }
+      return [];
+    });
   }
-  return soldSeats;
-}
+
+  Future<List<String>> getSoldSeatsListFahmi(String movieId) async {
+    try {
+      final snapshot = await _db
+          .collection(FirestoreCollectionsFahmi.bookingsFahmi)
+          .where('movieId', isEqualTo: movieId)
+          .get();
+
+      List<String> soldSeats = [];
+      for (var doc in snapshot.docs) {
+        BookingModelFahmi booking = BookingModelFahmi.fromMap(mapFromDoc(doc));
+        soldSeats.addAll(booking.seats);
+      }
+      return soldSeats;
+    } catch (e) {
+      print("Error getSoldSeatsListFahmi: $e");
+      return [];
+    }
+  }
+
+  Future<String?> checkoutBookingTransactionFahmi(
+    BookingModelFahmi booking,
+  ) async {
+    try {
+      return await _db.runTransaction<String?>((transaction) async {
+        // Dapatkan dokumen kursi terjual untuk movie ini
+        final soldSeatsDocRef = _db
+            .collection('sold_seats_fahmi')
+            .doc(booking.movieId);
+        final soldSeatsDoc = await transaction.get(soldSeatsDocRef);
+
+        List<String> soldSeats = [];
+        if (soldSeatsDoc.exists) {
+          soldSeats = List<String>.from(soldSeatsDoc.data()?['seats'] ?? []);
+        }
+
+        // Periksa apakah ada kursi yang sudah terjual
+        final unavailableSeats = booking.seats
+            .where((seat) => soldSeats.contains(seat))
+            .toList();
+        if (unavailableSeats.isNotEmpty) {
+          return null; // Kursi tidak tersedia
+        }
+
+        // Update kursi terjual
+        soldSeats.addAll(booking.seats);
+        transaction.set(soldSeatsDocRef, {'seats': soldSeats});
+
+        // Tambahkan booking
+        final bookingDocRef = _db
+            .collection(FirestoreCollectionsFahmi.bookingsFahmi)
+            .doc();
+        transaction.set(bookingDocRef, booking.toMap());
+        return bookingDocRef.id;
+      });
+    } catch (e) {
+      print("Error checkoutBookingTransactionFahmi: $e");
+      return null;
+    }
+  }
 
   Future<void> addUserFahmi(UserModelFahmi user) async {
     try {
@@ -94,6 +152,52 @@ Future<List<String>> getSoldSeatsFahmi(String movieId) async {
           .set(user.toMap());
     } catch (e) {
       print("Error addUserFahmi: $e");
+    }
+  }
+
+  Future<void> saveSelectedSeatsFahmi(
+    String userId,
+    String movieId,
+    List<String> seats,
+  ) async {
+    try {
+      await _db
+          .collection('selected_seats_fahmi')
+          .doc('${userId}_$movieId')
+          .set({'seats': seats});
+    } catch (e) {
+      print("Error saveSelectedSeatsFahmi: $e");
+    }
+  }
+
+  Future<List<String>> getSelectedSeatsFahmi(
+    String userId,
+    String movieId,
+  ) async {
+    try {
+      final doc = await _db
+          .collection('selected_seats_fahmi')
+          .doc('${userId}_$movieId')
+          .get();
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>?;
+        return List<String>.from(data?['seats'] ?? []);
+      }
+      return [];
+    } catch (e) {
+      print("Error getSelectedSeatsFahmi: $e");
+      return [];
+    }
+  }
+
+  Future<void> clearSelectedSeatsFahmi(String userId, String movieId) async {
+    try {
+      await _db
+          .collection('selected_seats_fahmi')
+          .doc('${userId}_$movieId')
+          .delete();
+    } catch (e) {
+      print("Error clearSelectedSeatsFahmi: $e");
     }
   }
 }

@@ -25,14 +25,18 @@ class BookingProvider extends ChangeNotifier {
     return total;
   }
 
-  Future<String> checkoutBooking({
+  Future<String?> checkoutBooking({
     required String userId,
     required String movieId,
     required String movieTitle,
     required List<String> seats,
     required int basePrice,
   }) async {
-    final total = calculateTotal(movieTitle: movieTitle, basePrice: basePrice, seats: seats);
+    final total = calculateTotal(
+      movieTitle: movieTitle,
+      basePrice: basePrice,
+      seats: seats,
+    );
     final id = const Uuid().v4();
     final booking = BookingModelFahmi(
       bookingId: id,
@@ -44,8 +48,10 @@ class BookingProvider extends ChangeNotifier {
       bookingDate: Timestamp.now(),
     );
 
-    // Simpan ke Firestore
-    await _firestoreService.addBookingReturnIdFahmi(booking);
-    return id;
+    // Simpan ke Firestore dengan transaksi
+    final result = await _firestoreService.checkoutBookingTransactionFahmi(
+      booking,
+    );
+    return result;
   }
 }
