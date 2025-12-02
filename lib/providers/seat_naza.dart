@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sss_cinema/services/firestore.dart';
+import 'package:sss_cinema/services/firestore_fahmi.dart';
 
 class SeatProvider extends ChangeNotifier {
   List<String> selectedSeatsNaza = [];
@@ -11,10 +11,10 @@ class SeatProvider extends ChangeNotifier {
 
   bool get selectedSeatsLoaded => _selectedSeatsLoaded;
 
-  /// Toggle kursi yang dipilih
+  /// kursi yang dipilih
   void toggleSeatNaza(String seat) {
     if (soldSeatsNaza.contains(seat))
-      return; // Kursi sudah sold, tidak bisa dipilih
+      return; // kursi yg sudah sold, tidak bisa dipilih
 
     if (selectedSeatsNaza.contains(seat)) {
       selectedSeatsNaza.remove(seat);
@@ -34,10 +34,9 @@ class SeatProvider extends ChangeNotifier {
   void listenSoldSeatsRealtime(String movieId) {
     _movieId = movieId;
     _firestoreService
-        .getSoldSeatsFahmi(movieId) // stream dari collection bookings
+        .getSoldSeatsFahmi(movieId)
         .listen((List<String> seats) {
           soldSeatsNaza = seats;
-          // hapus dari selectedSeats agar tidak bisa dipilih
           selectedSeatsNaza.removeWhere((seat) => soldSeatsNaza.contains(seat));
           notifyListeners();
         });
@@ -70,9 +69,7 @@ class SeatProvider extends ChangeNotifier {
     }
   }
 
-  /// Cek apakah kursi dipilih
   bool isSelectedNaza(String seat) => selectedSeatsNaza.contains(seat);
 
-  /// Cek apakah kursi sudah sold
   bool isSoldNaza(String seat) => soldSeatsNaza.contains(seat);
 }

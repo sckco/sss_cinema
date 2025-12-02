@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sss_cinema/screens/profile/profile.dart';
+import 'package:sss_cinema/screens/profile/profile_all.dart';
 
 import 'firebase_options.dart';
-import 'providers/auth.dart';
-import 'providers/movie.dart';
-import 'providers/seat.dart';
-import 'providers/booking.dart';
+import 'providers/auth_fahmi.dart';
+import 'providers/movie_daniel.dart';
+import 'providers/seat_naza.dart';
+import 'providers/booking_naza_rendra.dart';
 
-import 'screens/auth/login.dart';
-import 'screens/home/home.dart';
-import 'screens/detail/detail.dart';
-import 'screens/seat/seat.dart';
-import 'models/movie.dart';
+import 'screens/auth/login_fahmi.dart';
+import 'screens/home/home_daniel.dart';
+import 'screens/detail/detail_rendra.dart';
+import 'screens/seat/seat_naza.dart';
+import 'models/movie_fahmi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseAuth.instance
+      .signOut(); // Force logout on app start to require login
   runApp(const SssCinema());
 }
 
@@ -65,7 +67,7 @@ class SssCinema extends StatelessWidget {
           '/detail': (context) {
             final movie =
                 ModalRoute.of(context)!.settings.arguments as MovieModelFahmi;
-            return DetailScreen(movieDaniel: movie);
+            return DetailScreenRendra(movieDaniel: movie);
           },
 
           '/seat': (context) {
@@ -75,7 +77,7 @@ class SssCinema extends StatelessWidget {
           },
         },
 
-        home: const RootScreen(),
+        home: const LoginScreen(),
       ),
     );
   }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sss_cinema/providers/movie.dart';
-import 'package:sss_cinema/screens/profile/profile.dart';
-import 'package:sss_cinema/widgets/movie.dart';
-import 'package:sss_cinema/models/movie.dart';
+import 'package:sss_cinema/providers/movie_daniel.dart';
+import 'package:sss_cinema/screens/profile/profile_all.dart';
+import 'package:sss_cinema/widgets/movie_daniel.dart';
+import 'package:sss_cinema/models/movie_fahmi.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

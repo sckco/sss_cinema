@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sss_cinema/models/booking.dart';
-import 'package:sss_cinema/services/firestore.dart';
+import 'package:sss_cinema/models/booking_fahmi.dart';
+import 'package:sss_cinema/services/firestore_fahmi.dart';
 
 class BookingProvider extends ChangeNotifier {
   final FirestoreServiceFahmi _firestoreService = FirestoreServiceFahmi();
 
-  int calculateTotal({
+  int calculateTotalNaza({
     required String movieTitle,
     required int basePrice,
     required List<String> seats,
@@ -25,14 +25,14 @@ class BookingProvider extends ChangeNotifier {
     return total;
   }
 
-  Future<String?> checkoutBooking({
+  Future<String?> checkoutBookingRendra({
     required String userId,
     required String movieId,
     required String movieTitle,
     required List<String> seats,
     required int basePrice,
   }) async {
-    final total = calculateTotal(
+    final total = calculateTotalNaza(
       movieTitle: movieTitle,
       basePrice: basePrice,
       seats: seats,
@@ -48,10 +48,13 @@ class BookingProvider extends ChangeNotifier {
       bookingDate: Timestamp.now(),
     );
 
-    // Simpan ke Firestore dengan transaksi
     final result = await _firestoreService.checkoutBookingTransactionFahmi(
       booking,
     );
     return result;
+  }
+
+  Future<List<BookingModelFahmi>> getBookingsByUser(String userId) async {
+    return await _firestoreService.getBookingsByUserFahmi(userId);
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sss_cinema/services/auth.dart';
-import 'package:sss_cinema/services/firestore.dart';
-import 'package:sss_cinema/models/user.dart';
-import 'package:sss_cinema/utils/constants.dart';
+import 'package:sss_cinema/services/auth_fahmi.dart';
+import 'package:sss_cinema/services/firestore_fahmi.dart';
+import 'package:sss_cinema/models/user_fahmi.dart';
+import 'package:sss_cinema/utils/constants_fahmi.dart';
 
 class AuthProviderFahmi with ChangeNotifier {
   final AuthServiceFahmi _authServiceFahmi = AuthServiceFahmi();
@@ -61,7 +61,6 @@ class AuthProviderFahmi with ChangeNotifier {
       if (data != null) {
         currentUserFahmi = UserModelFahmi.fromMap(data);
       } else {
-        // fallback
         currentUserFahmi = UserModelFahmi(
           uid: firebaseUser.uid,
           name: firebaseUser.displayName ?? "-",

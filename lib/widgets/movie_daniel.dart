@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sss_cinema/models/movie.dart';
-import 'package:sss_cinema/screens/detail/detail.dart';
+import 'package:sss_cinema/models/movie_fahmi.dart';
+import 'package:sss_cinema/screens/detail/detail_rendra.dart';
 
 class MovieItemWidget extends StatelessWidget {
   final MovieModelFahmi movieDaniel;
@@ -14,7 +14,7 @@ class MovieItemWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => DetailScreen(movieDaniel: movieDaniel),
+            builder: (_) => DetailScreenRendra(movieDaniel: movieDaniel),
           ),
         );
       },

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sss_cinema/models/movie.dart';
-import 'package:sss_cinema/models/booking.dart';
-import 'package:sss_cinema/models/user.dart';
-import 'package:sss_cinema/utils/constants.dart';
+import 'package:sss_cinema/models/movie_fahmi.dart';
+import 'package:sss_cinema/models/booking_fahmi.dart';
+import 'package:sss_cinema/models/user_fahmi.dart';
+import 'package:sss_cinema/utils/constants_fahmi.dart';
 
 class FirestoreServiceFahmi {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -45,7 +45,7 @@ class FirestoreServiceFahmi {
     try {
       final snapshot = await _db
           .collection(FirestoreCollectionsFahmi.bookingsFahmi)
-          .where("userId", isEqualTo: userId)
+          .where("user id", isEqualTo: userId)
           .get();
 
       return snapshot.docs
@@ -108,7 +108,6 @@ class FirestoreServiceFahmi {
   ) async {
     try {
       return await _db.runTransaction<String?>((transaction) async {
-        // Dapatkan dokumen kursi terjual untuk movie ini
         final soldSeatsDocRef = _db
             .collection('sold_seats_fahmi')
             .doc(booking.movieId);
@@ -119,19 +118,16 @@ class FirestoreServiceFahmi {
           soldSeats = List<String>.from(soldSeatsDoc.data()?['seats'] ?? []);
         }
 
-        // Periksa apakah ada kursi yang sudah terjual
         final unavailableSeats = booking.seats
             .where((seat) => soldSeats.contains(seat))
             .toList();
         if (unavailableSeats.isNotEmpty) {
-          return null; // Kursi tidak tersedia
+          return null;
         }
 
-        // Update kursi terjual
         soldSeats.addAll(booking.seats);
         transaction.set(soldSeatsDocRef, {'seats': soldSeats});
 
-        // Tambahkan booking
         final bookingDocRef = _db
             .collection(FirestoreCollectionsFahmi.bookingsFahmi)
             .doc();

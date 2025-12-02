@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sss_cinema/models/movie.dart';
-import 'package:sss_cinema/providers/seat.dart';
-import 'package:sss_cinema/providers/booking.dart';
-import 'package:sss_cinema/providers/auth.dart';
-import 'package:sss_cinema/widgets/seat.dart';
+import 'package:sss_cinema/models/movie_fahmi.dart';
+import 'package:sss_cinema/providers/seat_naza.dart';
+import 'package:sss_cinema/providers/booking_naza_rendra.dart';
+import 'package:sss_cinema/providers/auth_fahmi.dart';
+import 'package:sss_cinema/widgets/seat_naza.dart';
 
 class SeatScreen extends StatefulWidget {
   final MovieModelFahmi movie;
@@ -109,7 +109,7 @@ class _SeatScreenState extends State<SeatScreen> {
 
     final seats = generateSeats();
 
-    final total = bookProv.calculateTotal(
+    final total = bookProv.calculateTotalNaza(
       movieTitle: widget.movie.title,
       basePrice: widget.movie.basePrice,
       seats: seatProv.selectedSeatsNaza,
@@ -214,8 +214,7 @@ class _SeatScreenState extends State<SeatScreen> {
                               return;
                             }
 
-                            // Simpan booking ke Firestore
-                            final bookingId = await bookProv.checkoutBooking(
+                            final bookingId = await bookProv.checkoutBookingRendra(
                               userId: user.uid,
                               movieId: widget.movie.movieId,
                               movieTitle: widget.movie.title,
@@ -224,7 +223,6 @@ class _SeatScreenState extends State<SeatScreen> {
                             );
 
                             if (bookingId == null) {
-                              // Kursi tidak tersedia
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -235,7 +233,6 @@ class _SeatScreenState extends State<SeatScreen> {
                               return;
                             }
 
-                            // Setelah booking berhasil
                             seatProv.clearSelectedSeatsNaza();
                             showPaymentSuccessPopup();
 
