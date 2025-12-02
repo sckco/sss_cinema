@@ -2,46 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sss_cinema/providers/movie.dart';
 import 'package:sss_cinema/widgets/movie.dart';
-import 'package:sss_cinema/models/movie.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final providerDaniel = Provider.of<MovieProvider>(context);
+    final provider = Provider.of<MovieProvider>(context);
 
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
-        title: const Text(
-          "SSS Cinema",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 26,
-            letterSpacing: 1.2,
-            color: Colors.white,
+        backgroundColor: Colors.black,
+        title: RichText(
+          text: const TextSpan(
+            children: [
+              TextSpan(
+                text: "SSS",
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+              TextSpan(
+                text: " Cinema",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
         centerTitle: true,
       ),
+
       body: RefreshIndicator(
-        onRefresh: () => providerDaniel.loadMoviesDaniel(),
-        color: Colors.white,
-        backgroundColor: Colors.black,
+        onRefresh: () => provider.loadMoviesDaniel(),
+        backgroundColor: Colors.redAccent,
+        color: const Color.fromARGB(255, 0, 0, 0),
         child: GridView.builder(
-          padding: const EdgeInsets.fromLTRB(16, 100, 16, 16),
-          itemCount: providerDaniel.movieListDaniel.length,
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+          itemCount: provider.movieListDaniel.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            mainAxisSpacing: 18,
-            crossAxisSpacing: 18,
-            childAspectRatio: 0.62,
+            crossAxisSpacing: 14,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.6,
           ),
           itemBuilder: (context, index) {
-            final movieDaniel = providerDaniel.movieListDaniel[index];
-            return MovieItemWidget(movieDaniel: movieDaniel);
+            final movie = provider.movieListDaniel[index];
+            return MovieItemWidget(movieDaniel: movie);
           },
         ),
       ),

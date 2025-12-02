@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'sss-cinema.firebasestorage.app',
     iosBundleId: 'com.example.sssCinema',
   );
+
 }

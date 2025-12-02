@@ -17,10 +17,10 @@ class MovieModelFahmi {
 
   factory MovieModelFahmi.fromMap(Map<String, dynamic> m) {
     return MovieModelFahmi(
-      movieId: m['movie id'],
+      movieId: m['movieId'] ?? m['movie id'],
       title: m['title'],
-      posterUrl: m['poster url'],
-      basePrice: m['base price'],
+      posterUrl: m['posterUrl'] ?? m['poster url'],
+      basePrice: m['basePrice'] ?? m['base price'],
       rating: (m['rating'] as num).toDouble(),
       duration: m['duration'],
     );
