@@ -1,5 +1,3 @@
-// lib/utils/constants.dart
-
 class FirestoreCollectionsFahmi {
   static const String usersFahmi = 'users';
   static const String moviesFahmi = 'movies';
