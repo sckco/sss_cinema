@@ -74,7 +74,7 @@ class _RegisterFahmiState extends State<RegisterFahmi> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Register sukses!')),
                             );
-                            Navigator.pop(context); // kembali ke login
+                            Navigator.pop(context); 
                           }
                         } catch (e) {
                           ScaffoldMessenger.of(
