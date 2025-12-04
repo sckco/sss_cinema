@@ -59,6 +59,18 @@ class _ProfileScreenFahmiState extends State<ProfileScreenFahmi> {
     }
   }
 
+  String _extractBalance(dynamic user) {
+    if (user == null) return '0';
+    if (user is UserModelFahmi) return user.balance.toStringAsFixed(0);
+    if (user is Map) return (user['balance'] ?? 0).toString();
+    try {
+      final v = user.balance ?? user['balance'] ?? 0;
+      return v.toString();
+    } catch (_) {
+      return '0';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProviderFahmi>(context);
@@ -99,6 +111,27 @@ class _ProfileScreenFahmiState extends State<ProfileScreenFahmi> {
             Text(
               "Email: $email",
               style: const TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            Card(
+              color: Colors.grey[800],
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.account_balance_wallet,
+                      color: Colors.redAccent,
+                      size: 30,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      "Balance: Rp ${_extractBalance(user)}",
+                      style: const TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             const Text(
@@ -142,7 +175,7 @@ class _ProfileScreenFahmiState extends State<ProfileScreenFahmi> {
                         return Card(
                           color: Colors.grey[800],
                           margin: const EdgeInsets.symmetric(vertical: 5),
-                          child: ListTile(
+                           child: ListTile(
                             onTap: () {
                               showDialog(
                                 context: context,

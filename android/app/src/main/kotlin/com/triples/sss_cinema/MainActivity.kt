@@ -1,4 +1,4 @@
-package com.example.sss_cinema
+package com.triples.sss_cinema
 
 import io.flutter.embedding.android.FlutterActivity
 
