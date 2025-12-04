@@ -57,7 +57,7 @@ class _SeatScreenState extends State<SeatScreen> {
                   Icon(Icons.check_circle, color: Colors.white, size: 40),
                   SizedBox(height: 10),
                   Text(
-                    "Pembayaran Berhasil!",
+                    "Pemesanan Berhasil!",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
