@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sss_cinema/models/booking_fahmi.dart';
 import 'package:sss_cinema/services/firestore_fahmi.dart';
 
-class BookingProvider extends ChangeNotifier {
+class BookingProviderRendra extends ChangeNotifier {
   final FirestoreServiceFahmi _firestoreService = FirestoreServiceFahmi();
 
-  int calculateTotalNaza({
+  int calculateTotalRendra({
     required String movieTitle,
     required int basePrice,
     required List<String> seats,
@@ -32,7 +32,7 @@ class BookingProvider extends ChangeNotifier {
     required List<String> seats,
     required int basePrice,
   }) async {
-    final total = calculateTotalNaza(
+    final total = calculateTotalRendra(
       movieTitle: movieTitle,
       basePrice: basePrice,
       seats: seats,

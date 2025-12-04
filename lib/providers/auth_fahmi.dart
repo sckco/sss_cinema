@@ -29,6 +29,7 @@ class AuthProviderFahmi with ChangeNotifier {
         uid: firebaseUser.uid,
         name: name,
         email: email,
+        balance: 0,
       );
 
       await FirestoreServiceFahmi().addUserFahmi(userModel);

@@ -34,7 +34,7 @@ class SssCinema extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProviderFahmi()),
         ChangeNotifierProvider(create: (_) => MovieProvider()),
         ChangeNotifierProvider(create: (_) => SeatProvider()),
-        ChangeNotifierProvider(create: (_) => BookingProvider()),
+        ChangeNotifierProvider(create: (_) => BookingProviderRendra()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

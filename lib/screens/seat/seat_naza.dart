@@ -57,7 +57,7 @@ class _SeatScreenState extends State<SeatScreen> {
                   Icon(Icons.check_circle, color: Colors.white, size: 40),
                   SizedBox(height: 10),
                   Text(
-                    "Pembayaran Berhasil!",
+                    "Pemesanan Berhasil!",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -97,7 +97,7 @@ class _SeatScreenState extends State<SeatScreen> {
   @override
   Widget build(BuildContext context) {
     final seatProv = Provider.of<SeatProvider>(context);
-    final bookProv = Provider.of<BookingProvider>(context);
+    final bookProv = Provider.of<BookingProviderRendra>(context);
     final auth = Provider.of<AuthProviderFahmi>(context);
 
     final user = auth.currentUserFahmi;
@@ -109,7 +109,7 @@ class _SeatScreenState extends State<SeatScreen> {
 
     final seats = generateSeats();
 
-    final total = bookProv.calculateTotalNaza(
+    final total = bookProv.calculateTotalRendra(
       movieTitle: widget.movie.title,
       basePrice: widget.movie.basePrice,
       seats: seatProv.selectedSeatsNaza,

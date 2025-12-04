@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sss_cinema/providers/auth.dart';
+import 'package:sss_cinema/providers/auth_fahmi.dart';
+import 'package:sss_cinema/screens/auth/login_fahmi.dart';
+import 'package:sss_cinema/utils/validators_fahmi.dart';
+import 'package:sss_cinema/utils/constants_fahmi.dart';
 
 class RegisterFahmi extends StatefulWidget {
   const RegisterFahmi({super.key});
@@ -10,76 +13,162 @@ class RegisterFahmi extends StatefulWidget {
 }
 
 class _RegisterFahmiState extends State<RegisterFahmi> {
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  bool obscurePassword = true;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
+  bool nameError = false;
+  bool emailError = false;
+  bool passwordError = false;
+  String nameErrorMessage = '';
+  String emailErrorMessage = '';
+  String passwordErrorMessage = '';
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void _validateFields() {
+    setState(() {
+      nameError = nameController.text.trim().isEmpty;
+      nameErrorMessage = nameError ? 'Nama harus diisi' : '';
+
+      emailError = !isValidEmailFahmi(emailController.text.trim());
+      emailErrorMessage = emailError
+          ? ErrorMessagesFahmi.invalidEmailFahmi
+          : '';
+
+      passwordError = !isValidPasswordFahmi(passwordController.text.trim());
+      passwordErrorMessage = passwordError
+          ? ErrorMessagesFahmi.weakPasswordFahmi
+          : '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    final isLoading = authProvider.isLoadingFahmi;
+    final authProvider = Provider.of<AuthProviderFahmi>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Buat Akun Baru', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 30),
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Nama', border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: passwordController,
-              obscureText: obscurePassword,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
-                  onPressed: () => setState(() => obscurePassword = !obscurePassword),
+      appBar: AppBar(
+        title: const Text(
+          "SSS Cinema",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        elevation: 2,
+      ),
+
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Banner di bawah navbar
+              SizedBox(
+                height: 180,
+                width: double.infinity,
+                child: Image.asset('assets/banner_sss.png', fit: BoxFit.cover),
+              ),
+
+              const SizedBox(height: 30),
+
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  border: const OutlineInputBorder(),
+                  errorText: nameError ? nameErrorMessage : null,
                 ),
               ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: isLoading ? null : () async {
-                  if (nameController.text.isEmpty || emailController.text.isEmpty || passwordController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Isi semua field')));
-                    return;
-                  }
-                  try {
-                    await authProvider.registerUserFahmi(emailController.text.trim(), passwordController.text.trim());
-                    // Otomatis redirect ke home karena auth state berubah
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
-                  }
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red[800]),
-                child: isLoading 
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('REGISTER', style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 12),
+
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: const OutlineInputBorder(),
+                  errorText: emailError ? emailErrorMessage : null,
+                ),
+                keyboardType: TextInputType.emailAddress,
               ),
-            ),
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Sudah punya akun? Login'),
-            ),
-          ],
+              const SizedBox(height: 12),
+
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: const OutlineInputBorder(),
+                  errorText: passwordError ? passwordErrorMessage : null,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              isLoading || authProvider.isLoadingFahmi
+                  ? const CircularProgressIndicator()
+                  : SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          _validateFields();
+                          if (nameError || emailError || passwordError) return;
+
+                          setState(() => isLoading = true);
+
+                          try {
+                            await authProvider.registerUserFahmi(
+                              nameController.text.trim(),
+                              emailController.text.trim(),
+                              passwordController.text.trim(),
+                            );
+
+                            if (authProvider.currentUserFahmi != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Register sukses!'),
+                                ),
+                              );
+                              Navigator.pop(context);
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Error: $e')),
+                            );
+                          } finally {
+                            setState(() => isLoading = false);
+                          }
+                        },
+                        child: const Text('Register'),
+                      ),
+                    ),
+
+              const SizedBox(height: 16),
+
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Sudah punya akun? Login'),
+              ),
+            ],
+          ),
         ),
       ),
     );

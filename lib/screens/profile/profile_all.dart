@@ -23,7 +23,7 @@ class _ProfileScreenFahmiState extends State<ProfileScreenFahmi> {
     super.initState();
     final authProvider = Provider.of<AuthProviderFahmi>(context, listen: false);
     final userId = authProvider.currentUserFahmi?.uid ?? '';
-    final bookingProvider = Provider.of<BookingProvider>(
+    final bookingProvider = Provider.of<BookingProviderRendra>(
       context,
       listen: false,
     );
