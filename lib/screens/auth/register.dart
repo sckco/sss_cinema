@@ -17,7 +17,7 @@ class _RegisterFahmiState extends State<RegisterFahmi> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProviderFahmi>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
     final isLoading = authProvider.isLoadingFahmi;
 
     return Scaffold(
