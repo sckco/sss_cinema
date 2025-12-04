@@ -8,7 +8,7 @@ import 'firebase_options.dart';
 import 'providers/auth_fahmi.dart';
 import 'providers/movie_daniel.dart';
 import 'providers/seat_naza.dart';
-import 'providers/booking_naza_rendra.dart';
+import 'providers/booking_rendra.dart';
 
 import 'screens/auth/login_fahmi.dart';
 import 'screens/home/home_daniel.dart';

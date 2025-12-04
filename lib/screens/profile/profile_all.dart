@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:sss_cinema/providers/auth_fahmi.dart';
 import 'package:sss_cinema/models/user_fahmi.dart';
-import 'package:sss_cinema/providers/booking_naza_rendra.dart';
+import 'package:sss_cinema/providers/booking_rendra.dart';
 import 'package:sss_cinema/models/booking_fahmi.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
