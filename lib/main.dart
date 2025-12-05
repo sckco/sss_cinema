@@ -19,8 +19,6 @@ import 'models/movie_fahmi.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseAuth.instance
-      .signOut(); // Force logout on app start to require login
   runApp(const SssCinema());
 }
 

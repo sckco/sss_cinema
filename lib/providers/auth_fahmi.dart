@@ -66,6 +66,7 @@ class AuthProviderFahmi with ChangeNotifier {
           uid: firebaseUser.uid,
           name: firebaseUser.displayName ?? "-",
           email: firebaseUser.email ?? "-",
+          balance: 0.0,
         );
       }
     }
