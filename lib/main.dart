@@ -75,7 +75,7 @@ class SssCinema extends StatelessWidget {
           },
         },
 
-        home: const LoginScreen(),
+        home: const RootScreen(),
       ),
     );
   }
@@ -86,14 +86,11 @@ class RootScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProviderFahmi>(context, listen: false);
+    final authProv = Provider.of<AuthProviderFahmi>(context, listen: false);
 
     return StreamBuilder<User?>(
-      stream: auth.streamAuthStatusFahmi(),
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Scaffold(body: Center(child: Text("Terjadi kesalahan")));
-        }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -102,6 +99,7 @@ class RootScreen extends StatelessWidget {
         }
 
         if (snapshot.data != null) {
+          authProv.loadCurrentUserFahmi();
           return const HomeScreen();
         }
 
@@ -110,3 +108,4 @@ class RootScreen extends StatelessWidget {
     );
   }
 }
+

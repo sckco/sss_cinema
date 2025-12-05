@@ -39,12 +39,6 @@ class AuthProviderFahmi with ChangeNotifier {
 
     isLoadingFahmi = false;
     notifyListeners();
-
-    Future<void> logoutFahmi() async {
-      await FirebaseAuth.instance.signOut();
-      currentUserFahmi = null;
-      notifyListeners();
-    }
   }
 
   Future<void> loginUserFahmi(String email, String password) async {
@@ -73,6 +67,26 @@ class AuthProviderFahmi with ChangeNotifier {
 
     isLoadingFahmi = false;
     notifyListeners();
+  }
+
+  Future<void> loadCurrentUserFahmi() async {
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+
+    if (firebaseUser != null) {
+      final data = await FirestoreServiceFahmi().getUserByUid(firebaseUser.uid);
+
+      if (data != null) {
+        currentUserFahmi = UserModelFahmi.fromMap(data);
+      } else {
+        currentUserFahmi = UserModelFahmi(
+          uid: firebaseUser.uid,
+          name: firebaseUser.displayName ?? "-",
+          email: firebaseUser.email ?? "-",
+        );
+      }
+
+      notifyListeners();
+    }
   }
 
   Future<void> logoutFahmi() async {
