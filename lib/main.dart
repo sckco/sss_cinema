@@ -21,7 +21,8 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAuth.instance
       .signOut(); // Force logout on app start to require login
-  runApp(const SssCinema());
+  runApp(const SssCinemaApp());
+
 }
 
 class SssCinemaApp extends StatelessWidget {

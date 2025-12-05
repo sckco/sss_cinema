@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sss_cinema/models/movie.dart';
-import 'package:sss_cinema/models/booking.dart';
-import 'package:sss_cinema/models/user.dart';
-import 'package:sss_cinema/utils/constants.dart';
+import 'package:sss_cinema/models/movie_fahmi.dart';
+import 'package:sss_cinema/models/booking_fahmi.dart';
+import 'package:sss_cinema/models/user_fahmi.dart';
+import 'package:sss_cinema/utils/constants_fahmi.dart';
 
 class FirestoreServiceFahmi {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
