@@ -56,3 +56,4 @@ class AuthProviderFahmi with ChangeNotifier {
   Stream<User?> streamAuthStatusFahmi() =>
       _authServiceFahmi.getAuthStateChangesFahmi();
 }
+

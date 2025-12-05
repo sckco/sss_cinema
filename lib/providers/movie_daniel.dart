@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sss_cinema/models/movie.dart';
+import 'package:sss_cinema/models/movie_fahmi.dart';
 
 class MovieProvider extends ChangeNotifier {
   List<MovieModelFahmi> movieListDaniel = [];

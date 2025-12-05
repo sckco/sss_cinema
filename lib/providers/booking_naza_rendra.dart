@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sss_cinema/models/booking.dart';
-import 'package:sss_cinema/services/firestore.dart';
+import 'package:sss_cinema/models/booking_fahmi.dart';
+import 'package:sss_cinema/services/firestore_fahmi.dart';
 
 class BookingProvider extends ChangeNotifier {
-  final FirestoreServiceFahmi _firestoreServiceFahmi = FirestoreServiceFahmi();
+  final FirestoreServiceFahmi _firestoreService = FirestoreServiceFahmi();
 
   int calculateTotalNaza({
     required String movieTitle,
@@ -18,17 +18,14 @@ class BookingProvider extends ChangeNotifier {
       final numPart = seat.replaceAll(RegExp(r'[^0-9]'), '');
       final seatNum = int.tryParse(numPart) ?? 0;
       int price = basePrice;
-      if (seatNum % 2 == 0) {
-        final discount = (price * 0.10).round();
-        price = price - discount;
-      }
+      if (seatNum % 2 == 0) price -= (price * 0.10).round();
       if (longTitle) price += 2500;
       total += price;
     }
     return total;
   }
 
-  Future<String> checkoutBookingRendra({
+  Future<String?> checkoutBookingRendra({
     required String userId,
     required String movieId,
     required String movieTitle,
@@ -40,17 +37,24 @@ class BookingProvider extends ChangeNotifier {
       basePrice: basePrice,
       seats: seats,
     );
-    final id = Uuid().v4();
+    final id = const Uuid().v4();
     final booking = BookingModelFahmi(
       bookingId: id,
-      movieId: movieId,
       userId: userId,
+      movieId: movieId,
       movieTitle: movieTitle,
       seats: seats,
       totalPrice: total,
       bookingDate: Timestamp.now(),
     );
-    await _firestoreServiceFahmi.addBookingFahmi(booking);
-    return id;
+
+    final result = await _firestoreService.checkoutBookingTransactionFahmi(
+      booking,
+    );
+    return result;
+  }
+
+  Future<List<BookingModelFahmi>> getBookingsByUser(String userId) async {
+    return await _firestoreService.getBookingsByUserFahmi(userId);
   }
 }
