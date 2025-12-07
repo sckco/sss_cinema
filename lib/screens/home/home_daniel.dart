@@ -12,6 +12,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final providerDaniel = Provider.of<MovieProvider>(context);
 
+    if (providerDaniel.movieListDaniel.isEmpty && !providerDaniel.loadingDaniel) {
+      providerDaniel.loadMoviesDaniel();
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFF000000),
 
