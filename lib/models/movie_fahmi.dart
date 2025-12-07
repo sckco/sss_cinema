@@ -17,10 +17,10 @@ class MovieModelFahmi {
 
   factory MovieModelFahmi.fromMap(Map<String, dynamic> m) {
     return MovieModelFahmi(
-      movieId: m['movie id'],
+      movieId: m['movieId'],
       title: m['title'],
-      posterUrl: m['poster url'],
-      basePrice: m['base price'],
+      posterUrl: m['posterUrl'],
+      basePrice: m['basePrice'],
       rating: (m['rating'] as num).toDouble(),
       duration: m['duration'],
     );
@@ -28,10 +28,10 @@ class MovieModelFahmi {
 
   Map<String, dynamic> toMap() {
     return {
-      'movie id': movieId,
+      'movieId': movieId,
       'title': title,
-      'poster url': posterUrl,
-      'base price': basePrice,
+      'posterUrl': posterUrl,
+      'basePrice': basePrice,
       'rating': rating,
       'duration': duration,
     };
