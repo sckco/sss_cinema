@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sss_cinema/screens/profile/profile_all.dart';
+import 'package:sss_cinema/services/seeder_fahmi.dart';
 
 import 'firebase_options.dart';
 import 'providers/auth_fahmi.dart';
@@ -19,11 +20,14 @@ import 'models/movie_fahmi.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const SssCinema());
+
+  // panggil seeder disini
+  await SeederFilmFahmi().seedMoviesFahmi();
+  runApp(const SssCinemaApp());
 }
 
-class SssCinema extends StatelessWidget {
-  const SssCinema({super.key});
+class SssCinemaApp extends StatelessWidget {
+  const SssCinemaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
