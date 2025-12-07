@@ -46,6 +46,7 @@ class FirestoreServiceFahmi {
       final snapshot = await _db
           .collection(FirestoreCollectionsFahmi.bookingsFahmi)
           .where("user id", isEqualTo: userId)
+          .orderBy("booking date", descending: true)
           .get();
 
       return snapshot.docs

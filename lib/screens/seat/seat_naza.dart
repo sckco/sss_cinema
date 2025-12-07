@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sss_cinema/models/movie_fahmi.dart';
 import 'package:sss_cinema/providers/seat_naza.dart';
-import 'package:sss_cinema/providers/booking_naza_rendra.dart';
+import 'package:sss_cinema/providers/booking_rendra.dart';
 import 'package:sss_cinema/providers/auth_fahmi.dart';
 import 'package:sss_cinema/widgets/seat_naza.dart';
 
@@ -57,7 +57,7 @@ class _SeatScreenState extends State<SeatScreen> {
                   Icon(Icons.check_circle, color: Colors.white, size: 40),
                   SizedBox(height: 10),
                   Text(
-                    "Pembayaran Berhasil!",
+                    "Pemesanan Berhasil!",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -109,7 +109,7 @@ class _SeatScreenState extends State<SeatScreen> {
 
     final seats = generateSeats();
 
-    final total = bookProv.calculateTotalNaza(
+    final total = bookProv.calculateTotalRendra(
       movieTitle: widget.movie.title,
       basePrice: widget.movie.basePrice,
       seats: seatProv.selectedSeatsNaza,

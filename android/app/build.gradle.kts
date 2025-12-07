@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sss_cinema"
+    namespace = "com.triples.sss_cinema"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

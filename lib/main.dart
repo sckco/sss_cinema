@@ -8,7 +8,7 @@ import 'firebase_options.dart';
 import 'providers/auth_fahmi.dart';
 import 'providers/movie_daniel.dart';
 import 'providers/seat_naza.dart';
-import 'providers/booking_naza_rendra.dart';
+import 'providers/booking_rendra.dart';
 
 import 'screens/auth/login_fahmi.dart';
 import 'screens/home/home_daniel.dart';
@@ -19,10 +19,7 @@ import 'models/movie_fahmi.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseAuth.instance
-      .signOut(); // Force logout on app start to require login
-  runApp(const SssCinemaApp());
-
+  runApp(const SssCinema());
 }
 
 class SssCinemaApp extends StatelessWidget {
@@ -78,7 +75,7 @@ class SssCinemaApp extends StatelessWidget {
           },
         },
 
-        home: const LoginScreen(),
+        home: const RootScreen(),
       ),
     );
   }
@@ -89,16 +86,11 @@ class RootScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProviderFahmi>(context, listen: false);
+    final authProv = Provider.of<AuthProviderFahmi>(context, listen: false);
 
     return StreamBuilder<User?>(
-      stream: auth.streamAuthStatusFahmi(),
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Scaffold(
-            body: Center(child: Text("Terjadi kesalahan")),
-          );
-        }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -107,7 +99,8 @@ class RootScreen extends StatelessWidget {
         }
 
         if (snapshot.data != null) {
-          return const HomeScreen(); // Sekarang HomeScreen sudah punya semua provider
+          authProv.loadCurrentUserFahmi();
+          return const HomeScreen();
         }
 
         return const LoginScreen();
@@ -115,3 +108,4 @@ class RootScreen extends StatelessWidget {
     );
   }
 }
+
